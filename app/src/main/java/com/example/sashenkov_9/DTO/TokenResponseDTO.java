@@ -8,8 +8,7 @@ public class TokenResponseDTO implements Serializable {
     private String refresh_token;
     private String username;
 
-    public TokenResponseDTO() {
-    }
+    public TokenResponseDTO() { }
 
     public String getAccess_token() {
         return access_token;

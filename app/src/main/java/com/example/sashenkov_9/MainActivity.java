@@ -15,7 +15,11 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.constraintlayout.helper.widget.Flow;
-
+import com.example.sashenkov_9.DTO.MapSaveListModelDTO;
+import com.example.sashenkov_9.DTO.MapSaveModelDTO;
+import com.example.sashenkov_9.Help.MapsCallback;
+import com.example.sashenkov_9.Help.MapsClass;
+import com.example.sashenkov_9.Help.MapsStorage;
 import com.example.sashenkov_9.Help.TokenStorage;
 
 import java.util.ArrayList;
@@ -23,12 +27,14 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    Flow flow;
+    ConstraintLayout root;
+    MapsClass mapsClass;
     Button registrationActivity;
     Button loginActivity;
-
     Button accountExitButton;
     TextView usernameTextMain;
-    private List<MyItem> backendList = new ArrayList<>();
+    private final ArrayList<Integer> mapButtonIds = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +42,10 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
+        root = findViewById(R.id.main);
+        flow = findViewById(R.id.flow);
 
+        mapsClass = new MapsClass(getApplicationContext());
         registrationActivity = findViewById(R.id.switch_activity_registration);
         loginActivity = findViewById(R.id.switch_activity_login);
         accountExitButton = findViewById(R.id.accountExitButton);
@@ -47,37 +56,17 @@ public class MainActivity extends AppCompatActivity {
 
         accountExitButton.setOnClickListener(v -> {
             TokenStorage.clear(getApplicationContext());
+            MapsStorage.clear(getApplicationContext());
+            clearMapsUI();
             updateAuthUI();
         });
 
-        ConstraintLayout root = findViewById(R.id.main);
-        Flow flow = findViewById(R.id.flow);
 
-        backendList.add(new MyItem("Кнопка 1"));
-        backendList.add(new MyItem("Кнопка 2"));
-        backendList.add(new MyItem("Кнопка 3"));
+        root = findViewById(R.id.main);
+        flow = findViewById(R.id.flow);
 
-        ArrayList<Integer> ids = new ArrayList<>();
-
-        for (MyItem item : backendList) {
-            Button btn = new Button(this);
-            btn.setId(View.generateViewId());
-            btn.setText(item.getName());
-
-            // по желанию: лисенер клика
-            // btn.setOnClickListener(v -> { ... });
-
-            root.addView(btn);
-            ids.add(btn.getId());
-        }
-
-        // привязываем все созданные кнопки к Flow
-        int[] idArray = new int[ids.size()];
-        for (int i = 0; i < ids.size(); i++) {
-            idArray[i] = ids.get(i);
-        }
-        flow.setReferencedIds(idArray);
-
+        updateAuthUI();
+        refreshMapsIfLoggedIn();
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -91,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         updateAuthUI();
+        refreshMapsIfLoggedIn();
     }
 
     private void updateAuthUI() {
@@ -126,19 +116,68 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void UpdateMapsInfo(View v){
-
+    private boolean hasToken() {
+        String token = TokenStorage.getAccessToken(getApplicationContext());
+        return token != null && !token.trim().isEmpty();
     }
 
-    private static class MyItem {
-        private final String name;
-
-        MyItem(String name) {
-            this.name = name;
+    private void clearMapsUI() {
+        for (int id : mapButtonIds) {
+            View v = root.findViewById(id);
+            if (v != null) root.removeView(v);
         }
-
-        String getName() {
-            return name;
-        }
+        mapButtonIds.clear();
+        flow.setReferencedIds(new int[0]);
     }
+
+    private void renderMapsFromStorage() {
+        MapSaveListModelDTO dto = MapsStorage.get(getApplicationContext());
+        if (dto == null || dto.getMapSaveList() == null) return;
+
+        clearMapsUI();
+
+        ArrayList<Integer> ids = new ArrayList<>();
+
+        for (MapSaveModelDTO m : dto.getMapSaveList()) {
+            Button btn = new Button(this);
+            int id = View.generateViewId();
+            btn.setId(id);
+            btn.setText(m.getMapName() != null ? m.getMapName() : ("Map " + m.getMapId()));
+
+            btn.setOnClickListener(v -> {
+                Intent intent = new Intent(MainActivity.this, StatsActivity.class);
+                intent.putExtra(StatsActivity.EXTRA_MAP_ID, m.getMapId());
+                startActivity(intent);
+            });
+
+            root.addView(btn);
+            ids.add(id);
+            mapButtonIds.add(id);
+        }
+
+        int[] idArray = new int[ids.size()];
+        for (int i = 0; i < ids.size(); i++) idArray[i] = ids.get(i);
+        flow.setReferencedIds(idArray);
+    }
+
+    private void refreshMapsIfLoggedIn() {
+        if (!hasToken()) {
+            MapsStorage.clear(getApplicationContext());
+            clearMapsUI();
+            return;
+        }
+
+        mapsClass.GetMapsInfo(new MapsCallback() {
+            @Override
+            public void onMapsRecieved(String result) {
+                runOnUiThread(() -> renderMapsFromStorage());
+            }
+
+            @Override
+            public void onError(String error) {
+
+            }
+        });
+    }
+
 }

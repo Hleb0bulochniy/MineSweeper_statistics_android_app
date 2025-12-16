@@ -19,7 +19,7 @@ import com.example.sashenkov_9.Help.AuthClass;
 
 public class RegistrationActivity extends AppCompatActivity {
 
-    AuthClass auth;
+    AuthClass authClass;
     Button registerButton;
     EditText userNameText;
     EditText emailText;
@@ -34,7 +34,7 @@ public class RegistrationActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_registration);
 
-        auth = new AuthClass(getApplicationContext());
+        authClass = new AuthClass(getApplicationContext());
 
         registerButton = findViewById(R.id.registrationButton);
         userNameText = findViewById(R.id.registrationName);
@@ -56,12 +56,12 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
     private void Register(View v){
-        auth.register(userNameText.getText().toString(), emailText.getText().toString(), passwordText.getText().toString(), passwordRepeatText.getText().toString(),
+        authClass.register(userNameText.getText().toString(), emailText.getText().toString(), passwordText.getText().toString(), passwordRepeatText.getText().toString(),
                 new RegisterCallback() {
 
                     @Override
                     public void onResult(String result) {
-                        auth.login(
+                        authClass.login(
                                 userNameText.getText().toString(),
                                 passwordText.getText().toString(),
                                 new LoginCallback() {

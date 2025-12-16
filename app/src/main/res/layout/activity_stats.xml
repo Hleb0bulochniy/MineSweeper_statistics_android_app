@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".StatsActivity">
+
+    <Button
+        android:id="@+id/stat_back_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Back"
+        android:layout_margin="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/stat_games"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Games total:"
+        app:layout_constraintTop_toBottomOf="@id/stat_back_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="16dp"/>
+
+    <TextView
+        android:id="@+id/stat_wins"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Wins:"
+        app:layout_constraintTop_toBottomOf="@id/stat_games"
+        app:layout_constraintStart_toStartOf="@id/stat_games"
+        app:layout_constraintEnd_toEndOf="@id/stat_games"/>
+
+    <TextView
+        android:id="@+id/stat_loses"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Loses:"
+        app:layout_constraintTop_toBottomOf="@id/stat_wins"
+        app:layout_constraintStart_toStartOf="@id/stat_games"
+        app:layout_constraintEnd_toEndOf="@id/stat_games"/>
+
+    <TextView
+        android:id="@+id/stat_opened_tiles"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Opened Tiles Total:"
+        app:layout_constraintTop_toBottomOf="@id/stat_loses"
+        app:layout_constraintStart_toStartOf="@id/stat_games"
+        app:layout_constraintEnd_toEndOf="@id/stat_games"/>
+
+    <TextView
+        android:id="@+id/stat_opened_numbers"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Opened Number Tiles:"
+        app:layout_constraintTop_toBottomOf="@id/stat_opened_tiles"
+        app:layout_constraintStart_toStartOf="@id/stat_games"
+        app:layout_constraintEnd_toEndOf="@id/stat_games"/>
+
+    <TextView
+        android:id="@+id/stat_opened_blank"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Opened Blank Tiles:"
+        app:layout_constraintTop_toBottomOf="@id/stat_opened_numbers"
+        app:layout_constraintStart_toStartOf="@id/stat_games"
+        app:layout_constraintEnd_toEndOf="@id/stat_games"/>
+
+    <TextView
+        android:id="@+id/stat_flags_total"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Flags Placed:"
+        app:layout_constraintTop_toBottomOf="@id/stat_opened_blank"
+        app:layout_constraintStart_toStartOf="@id/stat_games"
+        app:layout_constraintEnd_toEndOf="@id/stat_games"/>
+
+    <TextView
+        android:id="@+id/stat_flags_on_bombs"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Bombs Defused:"
+        app:layout_constraintTop_toBottomOf="@id/stat_flags_total"
+        app:layout_constraintStart_toStartOf="@id/stat_games"
+        app:layout_constraintEnd_toEndOf="@id/stat_games"/>
+
+    <TextView
+        android:id="@+id/stat_time_total"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Time Spent Total:"
+        app:layout_constraintTop_toBottomOf="@id/stat_flags_on_bombs"
+        app:layout_constraintStart_toStartOf="@id/stat_games"
+        app:layout_constraintEnd_toEndOf="@id/stat_games"/>
+
+    <TextView
+        android:id="@+id/stat_time_avg"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Average Game Time:"
+        app:layout_constraintTop_toBottomOf="@id/stat_time_total"
+        app:layout_constraintStart_toStartOf="@id/stat_games"
+        app:layout_constraintEnd_toEndOf="@id/stat_games"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
